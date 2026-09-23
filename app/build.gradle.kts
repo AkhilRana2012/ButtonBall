@@ -10,9 +10,25 @@ android {
     defaultConfig {
         applicationId = "com.buttonball.app"
         minSdk = 23
-        targetSdk = 30
+        targetSdk = 36
         versionCode = 1
         versionName = "1.0"
+    }
+    
+    signingConfigs {
+        create("release") {
+            storeFile = file("../buttonball-release.jks")
+            storePassword = "AkhilRana2012"
+            keyAlias = "buttonball"
+            keyPassword = "AkhilRana2012"
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+        }
     }
 
     compileOptions {
