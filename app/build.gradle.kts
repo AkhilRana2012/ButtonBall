@@ -3,6 +3,16 @@ plugins {
     id("org.jetbrains.kotlin.android")
 }
 
+import java.util.Properties
+import java.io.FileInputStream
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
+}
+
 android {
     namespace = "com.buttonball.app"
     compileSdk = 35
@@ -17,18 +27,20 @@ android {
     
     signingConfigs {
         create("release") {
-            storeFile = file("../buttonball-release.jks")
-            storePassword = "AkhilRana2012"
-            keyAlias = "buttonball"
-            keyPassword = "AkhilRana2012"
+             if (keystorePropertiesFile.exists()) {
+                 storeFile = file(keystoreProperties["storeFile"] as String)
+                  storePassword = keystoreProperties["storePassword"] as String
+                 keyAlias = keystoreProperties["keyAlias"] as String
+                 keyPassword = keystoreProperties["keyPassword"] as String
+             }
         }
     }
 
     buildTypes {
-        release {
+       release {
             isMinifyEnabled = false
             signingConfig = signingConfigs.getByName("release")
-        }
+         }
     }
 
     compileOptions {
